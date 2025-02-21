@@ -1,0 +1,106 @@
+/* Color Variables */
+:root {
+  --color-primary: #D84040;
+  --color-primary-dark: #A31D1D;
+  --color-secondary: #ECDCBF;
+  --color-secondary-light: #F8F2DE;
+  --color-black: #171717;
+}
+
+/* Global styles */
+body {
+  margin-top: 30px !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.subline, a.hnuser, .age, span.age {
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: var(--color-primary-dark) !important;
+}
+
+#hnmain {
+  max-width: 1024px !important;
+  min-width: 600px !important;
+  padding: 0 24px;
+  border-radius: 8px;
+  width: unset !important;
+  background-color: var(--color-secondary-light) !important;
+}
+
+tr.spacer {
+  height: 12px !important;
+}
+
+td.title {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+
+.hnheader {
+  padding-top: 20px;
+  padding-bottom: 16px;
+  background-color: transparent !important;
+  border-bottom: 2px solid var(--color-secondary);
+}
+
+#pagespace {
+  height: 24px !important;
+}
+
+/* Navigation bar styles */
+.electron-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-secondary);
+  padding: 5px;
+  z-index: 1000;
+}
+
+.electron-back-button {
+  background: none;
+  border: none;
+  color: black;
+  cursor: pointer;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+.electron-back-button:hover {
+  background: var(--color-secondary-light);
+  border-radius: 4px;
+}
+
+/* Comment Summary styles */
+.comment-summary {
+  background: var(--color-secondary);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.comment-summary h3 {
+  color: var(--color-primary-dark);
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.comment-summary p {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 12px;
+  color: var(--color-black);
+}
+
+.summary-loading {
+  color: var(--color-primary);
+  font-size: 11px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.summary-error {
+  color: var(--color-primary);
+}

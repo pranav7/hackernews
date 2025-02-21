@@ -1,5 +1,23 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
+require('dotenv').config();
+
+// Initialize remote module
+require('@electron/remote/main').initialize();
+
+const { fetchComments } = require('./services/hn');
+const { summarizeComments } = require('./services/mainOpenAI');
+
+// Add IPC handler for summarization
+ipcMain.handle('summarize-story', async (event, storyId) => {
+  try {
+    const comments = await fetchComments(storyId);
+    return await summarizeComments(comments);
+  } catch (error) {
+    console.error('Error summarizing story:', error);
+    throw error;
+  }
+});
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -9,17 +27,48 @@ if (require('electron-squirrel-startup')) {
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
+    icon: path.join(__dirname, 'assets', process.platform === 'win32' ? 'icon.ico' : 'icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: false,
+      contextIsolation: true,
+      sandbox: false, // Required for remote module
+      enableRemoteModule: true,
+      webSecurity: true
     },
   });
 
-  // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, 'index.html'));
+  // Enable remote module for this window
+  require('@electron/remote/main').enable(mainWindow.webContents);
 
-  // Open the DevTools.
+  // Handle new window creation
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith('https://news.ycombinator.com')) {
+      // Allow HN links to open in the same window
+      return { action: 'allow' };
+    } else {
+      // Open external links in new window
+      const newWindow = new BrowserWindow({
+        width: 1200,
+        height: 800,
+        webPreferences: {
+          preload: path.join(__dirname, 'preload.js'),
+          nodeIntegration: false,
+          contextIsolation: true,
+          sandbox: false
+        }
+      });
+      newWindow.loadURL(url);
+      return { action: 'deny' };
+    }
+  });
+
+  // Load Hacker News
+  mainWindow.loadURL('https://news.ycombinator.com');
+
+  // Always open DevTools
   mainWindow.webContents.openDevTools();
 };
 

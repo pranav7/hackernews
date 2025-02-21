@@ -1,8 +1,8 @@
 {
   "name": "hackernews",
-  "productName": "hackernews",
+  "productName": "Hacker News",
   "version": "0.0.1",
-  "description": "Hacker News (Advanced)",
+  "description": "Hacker News Desktop Client",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -18,7 +18,11 @@
   "author": "Pranav <hello@pranavsingh.me>",
   "license": "MIT",
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1"
+    "@electron/remote": "^2.1.2",
+    "common-tags": "^1.8.2",
+    "electron-squirrel-startup": "^1.0.1",
+    "openai": "^4.85.3",
+    "dotenv": "^16.4.7"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.7.0",
@@ -38,5 +42,34 @@
   "bugs": {
     "url": "https://github.com/pranav7/hackernews/issues"
   },
-  "homepage": "https://github.com/pranav7/hackernews#readme"
+  "homepage": "https://github.com/pranav7/hackernews#readme",
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "src/assets/icon"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "Hacker News"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  }
 }
