@@ -1,8 +1,8 @@
 {
-  "name": "hacker-newz",
-  "productName": "hacker-newz",
+  "name": "hackernews",
+  "productName": "hackernews",
   "version": "0.0.1",
-  "description": "My Electron application description",
+  "description": "Hacker News (Advanced)",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -11,8 +11,11 @@
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
   },
-  "keywords": [],
-  "author": "Pranav <pranav@june.so>",
+  "keywords": [
+    "electron",
+    "hackernews"
+  ],
+  "author": "Pranav <hello@pranavsingh.me>",
   "license": "MIT",
   "dependencies": {
     "electron-squirrel-startup": "^1.0.1"
