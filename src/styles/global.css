@@ -57,9 +57,11 @@ td.title {
   background: var(--color-secondary);
   padding: 5px;
   z-index: 1000;
+  display: flex;
+  gap: 8px;
 }
 
-.electron-back-button {
+.electron-nav-button {
   background: none;
   border: none;
   color: black;
@@ -68,7 +70,7 @@ td.title {
   font-size: 14px;
 }
 
-.electron-back-button:hover {
+.electron-nav-button:hover {
   background: var(--color-secondary-light);
   border-radius: 4px;
 }
@@ -97,8 +99,7 @@ td.title {
 
 .summary-loading {
   color: var(--color-primary);
-  font-size: 11px;
-  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
 }
 
 .summary-error {

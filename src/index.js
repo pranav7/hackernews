@@ -1,12 +1,20 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron');
 const path = require('node:path');
 require('dotenv').config();
+const Store = require('electron-store');
 
 // Initialize remote module
 require('@electron/remote/main').initialize();
 
 const { fetchComments } = require('./services/hn');
 const { summarizeComments } = require('./services/mainOpenAI');
+
+const store = new Store();
+
+// Test store functionality
+console.log('Testing electron-store...');
+store.set('test-key', 'test-value');
+console.log('Test value retrieved:', store.get('test-key'));
 
 // Add IPC handler for summarization
 ipcMain.handle('summarize-story', async (event, storyId) => {
@@ -19,12 +27,76 @@ ipcMain.handle('summarize-story', async (event, storyId) => {
   }
 });
 
+// Add IPC handlers for settings
+ipcMain.handle('get-api-key', () => {
+  console.log('Getting API key from store');
+  const key = store.get('openai-api-key');
+  console.log('Key exists:', !!key);
+  return key;
+});
+
+ipcMain.handle('save-api-key', (event, apiKey) => {
+  console.log('Saving API key to store');
+  store.set('openai-api-key', apiKey);
+  console.log('API key saved');
+  return true;
+});
+
+ipcMain.handle('open-settings', () => {
+  const settingsWindow = new BrowserWindow({
+    width: 600,
+    height: 400,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload-settings.js'),
+      nodeIntegration: false,
+      contextIsolation: true,
+      sandbox: false
+    }
+  });
+  settingsWindow.loadFile(path.join(__dirname, 'settings.html'));
+  settingsWindow.webContents.openDevTools();
+});
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+const createMenu = () => {
+  const template = [
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Settings',
+          click: () => {
+            const settingsWindow = new BrowserWindow({
+              width: 600,
+              height: 400,
+              webPreferences: {
+                preload: path.join(__dirname, 'preload-settings.js'),
+                nodeIntegration: false,
+                contextIsolation: true,
+                sandbox: false
+              }
+            });
+            settingsWindow.loadFile(path.join(__dirname, 'settings.html'));
+          }
+        },
+        { type: 'separator' },
+        { role: 'quit' }
+      ]
+    },
+    { role: 'editMenu' },
+    { role: 'viewMenu' },
+    { role: 'windowMenu' }
+  ];
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+};
+
 const createWindow = () => {
+  createMenu();
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1200,

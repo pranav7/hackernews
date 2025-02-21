@@ -22,13 +22,21 @@ window.addEventListener('DOMContentLoaded', async () => {
   const navbar = document.createElement('div');
   navbar.className = 'electron-navbar';
 
+  // Add settings button (always visible)
+  const settingsButton = document.createElement('button');
+  settingsButton.textContent = '⚙️ Settings';
+  settingsButton.className = 'electron-nav-button';
+  settingsButton.onclick = () => ipcRenderer.invoke('open-settings');
+  navbar.appendChild(settingsButton);
+
+  // Add back button (only on non-home pages)
   const isHomePage = window.location.href === 'https://news.ycombinator.com/' ||
                     window.location.href === 'https://news.ycombinator.com';
 
   if (!isHomePage) {
     const backButton = document.createElement('button');
     backButton.textContent = 'Back';
-    backButton.className = 'electron-back-button';
+    backButton.className = 'electron-nav-button';
     backButton.onclick = () => window.history.back();
     navbar.appendChild(backButton);
   }
